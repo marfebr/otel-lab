@@ -1,0 +1,81 @@
+version: '3'
+services:
+  jaeger-all-in-one:
+    image: jaegertracing/all-in-one:latest
+    restart: always
+    ports:
+      - "16686:16686"
+      - "14268"
+      - "14250"
+  
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"
+    restart: always
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    restart: always
+    volumes:
+      - ./.docker/prometheus.yaml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    restart: always
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./.docker/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "1888:1888"   # pprof extension
+      - "8888:8888"   # Prometheus metrics exposed by the collector
+      - "8889:8889"   # Prometheus exporter metrics
+      - "4317:4317"   # OTLP gRPC receiver
+    depends_on:
+      - zipkin
+
+  service-a:
+    container_name: service-a
+    build:
+      context: ./service-a
+    environment:
+      - HTTP_PORT=:8080
+      - SERVICE_B_URL=http://service-b:8181
+      - OTEL_SERVICE_NAME=service-a
+      - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
+    ports:
+      - "8080:8080"
+    depends_on:
+      - otel-collector
+      - service-b
+
+  service-b:
+    container_name: service-b
+    build:
+      context: ./service-b
+    environment:
+      - HTTP_PORT=:8181
+      - VIACEP_BASE_URL=https://viacep.com.br/ws
+      - OPENWEATHER_BASE_URL=https://api.openweathermap.org/data/2.5
+      - WEATHER_API=${WEATHER_API}
+    
+      - OTEL_SERVICE_NAME=service-b
+      - OTEL_EXPORTER_OTLP_ENDPOINT=otel-collector:4317
+    ports:
+      - "8181:8181"
+    depends_on:
+      - otel-collector
+
+  goapp:
+    container_name: goapp
+    image: golang:latest
+    depends_on:
+      - jaeger-all-in-one
+      - otel-collector
+    volumes:
+      - .:/go/src/app
+    command: ["tail", "-f", "/dev/null"]
+    

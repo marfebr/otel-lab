@@ -1,0 +1,38 @@
+# Binários Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Diretórios de build
+/build/
+/bin/
+/service-a/service-a
+/service-b/service-b
+
+# Dependências
+vendor/
+
+# Arquivos temporários
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Arquivos de IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Docker
+**/service-a
+**/service-b
+.docker/
+
+# Outros
+.env
+.env.*
+coverage.out 
