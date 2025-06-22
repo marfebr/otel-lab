@@ -67,7 +67,7 @@ Assim, é possível acompanhar toda a cadeia de chamadas e identificar gargalos 
 ### Configuração
 1. Configure a variável de ambiente para a API do OpenWeatherMap:
 ```bash
-export  WEATHER_API6=sua_api_key_aqui
+export  WEATHER_API=sua_api_key_aqui
 ```
 
 ### Execução
