@@ -35,9 +35,7 @@
     Implementar tracing distribuído entre Serviço A - Serviço B
     Utilizar span para medir o tempo de resposta do serviço de busca de CEP e busca de temperatura
 
-Dicas:
 
-    use o codigo do diretorio "base/comunicacao-ms" como base para a funcionalidade
 
 ## Propagação de Trace OTEL
 
@@ -64,12 +62,12 @@ Assim, é possível acompanhar toda a cadeia de chamadas e identificar gargalos 
 
 ### Pré-requisitos
 - Docker e Docker Compose instalados
-- API Key do OpenWeatherMap (gratuita em https://openweathermap.org/api)
+- API Key do WeatherAPI 
 
 ### Configuração
 1. Configure a variável de ambiente para a API do OpenWeatherMap:
 ```bash
-export OPENWEATHER_API_KEY=sua_api_key_aqui
+export  WEATHER_API6=sua_api_key_aqui
 ```
 
 ### Execução
@@ -162,25 +160,9 @@ No Zipkin, você poderá acompanhar o tracing distribuído entre os serviços, c
 ### Estrutura do Projeto:
 ```
 Otel-lab/
-├── service-a/          # Serviço A - Validação de CEP e busca de cidade
+├── service-a/          # Serviço A - Validação de CEP
 ├── service-b/          # Serviço B - Orquestração e clima
-├── base/              # Código base original
 ├── docker-compose.yaml # Orquestração completa
 └── README.md          # Este arquivo
 ```
 
-## Resultados dos Testes Finais
-
-- **CEP válido:**
-  - Status: 200
-  - Resposta: cidade e clima retornados corretamente.
-
-- **CEP inválido (menos de 8 dígitos):**
-  - Status: 422
-  - Resposta: {"error":"invalid zipcode"}
-
-- **CEP válido mas inexistente:**
-  - Status: 404
-  - Resposta: {"error":"can not find zipcode"}
-
-O sistema está robusto, com tracing distribuído OTEL funcionando ponta a ponta, e responde corretamente para todos os cenários principais e de erro.
