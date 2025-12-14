@@ -38,4 +38,5 @@ vendor/
 coverage.out
 plan.md
 architecture.md
+tracing-documentation.md
 code.md
