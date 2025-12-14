@@ -35,4 +35,7 @@ vendor/
 # Outros
 .env
 .env.*
-coverage.out 
+coverage.out
+plan.md
+arquitecture.md
+code.md
