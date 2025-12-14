@@ -37,5 +37,5 @@ vendor/
 .env.*
 coverage.out
 plan.md
-arquitecture.md
+architecture.md
 code.md
