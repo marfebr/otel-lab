@@ -28,9 +28,9 @@ vendor/
 *.code-workspace
 
 # Docker
-**/service-a
-**/service-b
-.docker/
+# **/service-a
+# **/service-b
+#.docker/
 
 # Outros
 .env
